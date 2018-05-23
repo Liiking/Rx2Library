@@ -26,21 +26,21 @@ public class ProgressSubscriber<T> implements Observer<T>, ProgressCancelListene
     private Context context;
     private Disposable disposable;
 
-    public ProgressSubscriber(SubscriberListener<T> mSubscriberListener) {
-        this(false, false, mSubscriberListener);
+    public ProgressSubscriber(Context context, SubscriberListener<T> mSubscriberListener) {
+        this(context, false, false, mSubscriberListener);
     }
 
-    public ProgressSubscriber(boolean hideLoading, SubscriberListener<T> mSubscriberListener) {
-        this(hideLoading, false, mSubscriberListener);
+    public ProgressSubscriber(Context context, boolean hideLoading, SubscriberListener<T> mSubscriberListener) {
+        this(context, hideLoading, false, mSubscriberListener);
     }
 
-    public ProgressSubscriber(boolean hideLoading, boolean hideMsg, SubscriberListener<T> mSubscriberListener) {
-        context = ApiManager.getContext();
+    public ProgressSubscriber(Context context, boolean hideLoading, boolean hideMsg, SubscriberListener<T> mSubscriberListener) {
+        this.context = context;
         this.hideMsg = hideMsg;
         this.hideLoading = hideLoading;
         this.mSubscriberListener = mSubscriberListener;
         if (!hideLoading) {
-            mProgressDialogHandler = new ProgressDialogHandler(ApiManager.getContext(), this, false);
+            mProgressDialogHandler = new ProgressDialogHandler(context, this, false);
         }
     }
 

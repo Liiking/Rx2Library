@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 
+import com.http.httpdemo.http.ApiManager;
 import com.http.httpdemo.http.Utility;
 
 /**

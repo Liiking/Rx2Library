@@ -1,6 +1,7 @@
 package com.http.httpdemo;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.http.httpdemo.http.ApiManager;
 
@@ -12,10 +13,12 @@ import com.http.httpdemo.http.ApiManager;
 public class MyApplication extends Application {
 
     private String baseUrl = "http://op.juhe.cn/";
+    public static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         ApiManager.initApiManger(this, baseUrl);
     }
 }

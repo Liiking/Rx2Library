@@ -2,6 +2,9 @@ package com.http.httpdemo.http.download;
 
 import android.content.Context;
 import android.text.TextUtils;
+
+import com.http.httpdemo.FileUtil;
+import com.http.httpdemo.MyApplication;
 import com.http.httpdemo.http.Utility;
 import java.io.Closeable;
 import java.io.File;
@@ -32,7 +35,7 @@ public class DownloadManager {
     private static final AtomicReference<DownloadManager> INSTANCE = new AtomicReference<>();
     private HashMap<String, Call> downCalls;// 用来存放各个下载的请求
     private OkHttpClient mClient;// OKHttpClient;
-    private static String ROOT_DOWNLOAD_DIR;
+    private static String ROOT_DOWNLOAD_DIR = FileUtil.getDownloadPath(MyApplication.context);
 
     // 获得一个单例类
     public static DownloadManager getInstance() {

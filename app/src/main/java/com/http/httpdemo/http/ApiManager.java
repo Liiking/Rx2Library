@@ -1,10 +1,10 @@
 package com.http.httpdemo.http;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.http.httpdemo.http.exception.HttpResponseFunc;
@@ -13,7 +13,7 @@ import com.http.httpdemo.http.interceptor.DefaultInterceptorNetwork;
 import com.http.httpdemo.http.response.BaseResponse;
 import com.http.httpdemo.http.subscribers.ProgressSubscriber;
 import com.http.httpdemo.http.subscribers.SubscriberListener;
-
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -24,10 +24,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -40,7 +38,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.CallAdapter;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -55,11 +52,9 @@ public class ApiManager {
     private static long READ_TIME = 30; // 读取时间超时 秒级别
     private static long CONNECT_TIME = 10; // 连接时间超时 秒级别
     private static Map<String, Disposable> disposableMap = new LinkedHashMap<>();
-    private static Application context;
 
-    private ApiManager(Application mContext, String baseUrl) {
-        context = mContext;
-        apiNetService = createServiceAPI(baseUrl, RxJavaCallAdapterFactory.create(), IAPINetService.class, null, null, null);
+    private ApiManager(Context context, String baseUrl) {
+        apiNetService = createServiceAPI(context, baseUrl, RxJava2CallAdapterFactory.create(), IAPINetService.class, null, null, null);
     }
 
     public static void initApiManger(Application mContext, String baseUrl) {
@@ -72,13 +67,6 @@ public class ApiManager {
 
     public static IAPINetService getNetAPIInstance() {
         return apiNetService;
-    }
-
-    public static Application getContext() {
-        if (context == null) {
-            throw new ExceptionInInitializerError("请先在Application中调用初始化ApiManager！");
-        }
-        return context;
     }
 
     /**
@@ -100,7 +88,7 @@ public class ApiManager {
      * @param params            Get请求是，对应的url参数
      * @param listener          请求回调
      */
-    public <T> void request(String disposableFlag, final boolean hideLoading, final boolean hideMsg, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, final SubscriberListener<T> listener) {
+    public <T> void request(Context context, String disposableFlag, final boolean hideLoading, final boolean hideMsg, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, final SubscriberListener<T> listener) {
         Observable<BaseResponse> observable;
         if (params == null) {
             params = new HashMap<>();
@@ -112,14 +100,15 @@ public class ApiManager {
             observable = getNetAPIInstance().requestPost(path, params);
         }
         Utility.log("params:" + new Gson().toJson(params));
-        doSubscribe(disposableFlag, hideLoading, hideMsg, observable, tClass, listener);
+        doSubscribe(context, disposableFlag, hideLoading, hideMsg, observable, tClass, listener);
     }
 
-    public <T> void doSubscribe(String disposableFlag, boolean hideLoading, Observable<BaseResponse> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
-        doSubscribe(disposableFlag, hideLoading, false, observable, tClass, listener);
+    public <T> void doSubscribe(Context context, String disposableFlag, boolean hideLoading, Observable<BaseResponse> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
+        doSubscribe(context, disposableFlag, hideLoading, false, observable, tClass, listener);
     }
-    public <T> void doSubscribe(final String disposableFlag, boolean hideLoading, boolean hideMsg, Observable<BaseResponse> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
-        ProgressSubscriber<T> subscriber = new ProgressSubscriber<T>(hideLoading, hideMsg, listener);
+
+    public <T> void doSubscribe(Context context, final String disposableFlag, boolean hideLoading, boolean hideMsg, Observable<BaseResponse> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
+        ProgressSubscriber<T> subscriber = new ProgressSubscriber<T>(context, hideLoading, hideMsg, listener);
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -201,68 +190,68 @@ public class ApiManager {
         }
     }
 
-    public <T> void requestPost(String disposableFlag, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
-        requestPost(disposableFlag, false, path, tClass, params, listener);
+    public <T> void requestPost(Context context, String disposableFlag, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+        requestPost(context, disposableFlag, false, path, tClass, params, listener);
     }
 
-    public <T> void requestPost(String disposableFlag, boolean hideLoading, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
-        requestPost(disposableFlag, hideLoading, false, path, tClass, params, listener);
+    public <T> void requestPost(Context context, String disposableFlag, boolean hideLoading, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+        requestPost(context, disposableFlag, hideLoading, false, path, tClass, params, listener);
     }
 
-    public <T> void requestPost(String disposableFlag, boolean hideLoading, boolean hideMsg, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
-        request(disposableFlag, hideLoading, hideMsg, path, false, tClass, params, listener);
+    public <T> void requestPost(Context context, String disposableFlag, boolean hideLoading, boolean hideMsg, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener listener) {
+        request(context, disposableFlag, hideLoading, hideMsg, path, false, tClass, params, listener);
     }
 
-    public <T> void requestGet(String disposableFlag, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
-        requestGet(disposableFlag, false, path, tClass, params, listener);
+    public <T> void requestGet(Context context, String disposableFlag, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
+        requestGet(context, disposableFlag, false, path, tClass, params, listener);
     }
 
-    public <T> void requestGet(String disposableFlag, boolean hideLoading, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
-        requestGet(disposableFlag, hideLoading, false, path, tClass, params, listener);
+    public <T> void requestGet(Context context, String disposableFlag, boolean hideLoading, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
+        requestGet(context, disposableFlag, hideLoading, false, path, tClass, params, listener);
     }
 
-    public <T> void requestGet(String disposableFlag, boolean hideLoading, boolean hideMsg, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
-        request(disposableFlag, hideLoading, hideMsg, path, true, tClass, params, listener);
+    public <T> void requestGet(Context context, String disposableFlag, boolean hideLoading, boolean hideMsg, @NonNull String path, @NonNull Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
+        request(context, disposableFlag, hideLoading, hideMsg, path, true, tClass, params, listener);
     }
 
-    public <T> void request(String disposableFlag, final boolean hideLoading, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
-        request(disposableFlag, hideLoading, false, path, isGet, tClass, params, listener);
+    public <T> void request(Context context, String disposableFlag, final boolean hideLoading, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, SubscriberListener<T> listener) {
+        request(context, disposableFlag, hideLoading, false, path, isGet, tClass, params, listener);
     }
 
     /**
      * 修改
      */
-    public <T> void put(String disposableFlag, final boolean hideLoading, String path, String id, final Class<T> tClass, SubscriberListener<T> listener) {
+    public <T> void put(Context context, String disposableFlag, final boolean hideLoading, String path, String id, final Class<T> tClass, SubscriberListener<T> listener) {
         Map<String, String> params = new HashMap<>();
         params.put("id", id);
-        put(disposableFlag, hideLoading, path, params, tClass, listener);
+        put(context, disposableFlag, hideLoading, path, params, tClass, listener);
     }
 
     /**
      * 修改
      */
-    public <T> void put(String disposableFlag, final boolean hideLoading, String path, Map<String, String> params, final Class<T> tClass, SubscriberListener<T> listener) {
+    public <T> void put(Context context, String disposableFlag, final boolean hideLoading, String path, Map<String, String> params, final Class<T> tClass, SubscriberListener<T> listener) {
         Observable<BaseResponse> observable;
         observable = getNetAPIInstance().put(path, params);
-        doSubscribe(disposableFlag, hideLoading, observable, tClass, listener);
+        doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
     }
 
     /**
      * restful风格删除
      */
-    public <T> void deleteRestful(String disposableFlag, final boolean hideLoading, String path, String id, final Class<T> tClass, SubscriberListener<T> listener) {
+    public <T> void deleteRestful(Context context, String disposableFlag, final boolean hideLoading, String path, String id, final Class<T> tClass, SubscriberListener<T> listener) {
         Observable<BaseResponse> observable;
         observable = getNetAPIInstance().delete(path, id);
-        doSubscribe(disposableFlag, hideLoading, observable, tClass, listener);
+        doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
     }
 
     /**
      * 删除
      */
-    public <T> void delete(String disposableFlag, final boolean hideLoading, String path, Map<String, String> params, final Class<T> tClass, SubscriberListener<T> listener) {
+    public <T> void delete(Context context, String disposableFlag, final boolean hideLoading, String path, Map<String, String> params, final Class<T> tClass, SubscriberListener<T> listener) {
         Observable<BaseResponse> observable;
         observable = getNetAPIInstance().delete(path, params);
-        doSubscribe(disposableFlag, hideLoading, observable, tClass, listener);
+        doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
     }
 
     /**
@@ -275,20 +264,20 @@ public class ApiManager {
      * @param params            请求参数
      * @param listener          请求回调
      */
-    public <T> void uploadFile(String disposableFlag, final boolean hideLoading, String path, final Class<T> tClass, final Map<String, RequestBody> params, SubscriberListener<T> listener) {
+    public <T> void uploadFile(Context context, String disposableFlag, final boolean hideLoading, String path, final Class<T> tClass, final Map<String, RequestBody> params, SubscriberListener<T> listener) {
         Observable<BaseResponse> observable;
         observable = getNetAPIInstance().uploadFile(path, params);
-        doSubscribe(disposableFlag, hideLoading, observable, tClass, listener);
+        doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
     }
 
-    public static <T> T createServiceAPI(String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass) {
-        return createServiceAPI(baseUrl, factory, serviceClass, null, null, null);
+    public static <T> T createServiceAPI(Context context, String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass) {
+        return createServiceAPI(context, baseUrl, factory, serviceClass, null, null, null);
     }
 
     /**
      * 创建ServiceApi对象
      */
-    public static <T> T createServiceAPI(String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass, Interceptor applicationInterceptor, Interceptor[] netWorkInterceptor, int... rawResources) {
+    public static <T> T createServiceAPI(Context context, String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass, Interceptor applicationInterceptor, Interceptor[] netWorkInterceptor, int... rawResources) {
         try {
             Interceptor temApplicationInterceptor = applicationInterceptor;
             if (temApplicationInterceptor == null) {
@@ -309,7 +298,7 @@ public class ApiManager {
 //            }
             builder.retryOnConnectionFailure(true);
             try {
-                initHttpsConfig(builder, rawResources);
+                initHttpsConfig(context, builder, rawResources);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -343,7 +332,7 @@ public class ApiManager {
     /***
      * https证书
      */
-    public static void initHttpsConfig(OkHttpClient.Builder builder, int... rawResources) {
+    public static void initHttpsConfig(Context context, OkHttpClient.Builder builder, int... rawResources) {
         try {
             if (context != null && rawResources != null && rawResources.length > 0) {
                 final String KEY_STORE_TYPE_P12 = "PKCS12";//证书类型

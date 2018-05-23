@@ -1,14 +1,12 @@
 package com.http.httpdemo.http.exception;
 
 import android.net.ParseException;
-
 import com.google.gson.JsonParseException;
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 
 import org.json.JSONException;
-
 import java.net.ConnectException;
 
-import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Created by qwy on 17/8/29.
