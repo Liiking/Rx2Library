@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">HttpDemo</string>
+    <string name="no_net_error">网络异常，请稍后再试</string>
+</resources>
