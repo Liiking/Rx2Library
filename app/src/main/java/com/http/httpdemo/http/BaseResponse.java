@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class BaseResponse<T> {
     // 与后台约定好的固定返回格式
+    @SerializedName("msg")
     private String message;
     private int code;
-    @SerializedName("result") // 测试用
     public T data;
 
     public String getMessage() {

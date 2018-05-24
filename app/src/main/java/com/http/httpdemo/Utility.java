@@ -166,6 +166,25 @@ public class Utility {
     }
 
     /**
+     * 复制指定内容到系统剪贴板
+     * @param context
+     * @param content
+     */
+    public static void copyContent(Context context, String content) {
+        if (TextUtils.isEmpty(content)) {
+            return ;
+        }
+        // 获取剪贴板管理器：
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm != null) {
+            // 创建普通字符型ClipData
+            ClipData mClipData = ClipData.newPlainText("Label", content);
+            // 将ClipData内容放到系统剪贴板里。
+            cm.setPrimaryClip(mClipData);
+        }
+    }
+
+    /**
      * 使用Log来显示调试信息,因为log在实现上每个message有4k字符长度限制
      *
      * @param tag   tag

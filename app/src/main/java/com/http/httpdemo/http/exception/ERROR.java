@@ -8,19 +8,17 @@ public class ERROR {
     /**
      * 约定请求成功的返回码
      */
-    public static final int REQUEST_OK = 200;
-    public static final int REQUEST_CREATE_OK = 201;
-    public static final int REQUEST_DELETE_OK = 204;
+    public static final int REQUEST_OK = 0;
 
     /**
      * token为空或已过期，刷新token（跳转登录）
      */
-    public static final int TOKEN_NEED_REFRESH = 401;
+    public static final int TOKEN_NEED_REFRESH = 5;
 
     /**
      * 需要展示错误信息的错误
      */
-    public static final int SHOW_MESSAGE_ERROR = 400;
+    public static final int SHOW_MESSAGE_ERROR = 1;
 
     /**
      * 未知错误

@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.http.httpdemo.Utility;
 import com.http.httpdemo.http.exception.HttpResponseFunc;
+import com.http.httpdemo.http.exception.ServerResponseFunc;
 import com.http.httpdemo.http.interceptor.DefaultInterceptorApplication;
 import com.http.httpdemo.http.interceptor.DefaultInterceptorNetwork;
 import com.http.httpdemo.http.subscribers.ProgressSubscriber;
@@ -109,7 +110,7 @@ public class ApiManager {
     }
 
     /**
-     * 订阅 请求开始
+     * 统一订阅入口 请求开始
      *
      * @param context           上下文
      * @param disposableFlag    取消订阅的flag
@@ -131,6 +132,7 @@ public class ApiManager {
                         addDisposable(disposableFlag, disposable);
                     }
                 })
+                .map(new ServerResponseFunc<T>())
                 .map(new Function<BaseResponse, T>() {
                     @Override
                     public T apply(BaseResponse response) {
@@ -272,14 +274,14 @@ public class ApiManager {
      *
      * @param disposableFlag    取消订阅flag
      * @param hideLoading       是否隐藏加载框
-     * @param path              上传文件接口地址
+     * @param url               上传文件接口地址
      * @param tClass            返回data数据类型
      * @param params            请求参数
      * @param listener          请求回调
      */
-    public <T> void uploadFile(Context context, String disposableFlag, final boolean hideLoading, String path, final Class<T> tClass, final Map<String, RequestBody> params, SubscriberListener<T> listener) {
+    public <T> void uploadFile(Context context, String disposableFlag, final boolean hideLoading, String url, final Class<T> tClass, final Map<String, RequestBody> params, SubscriberListener<T> listener) {
         Observable<BaseResponse> observable;
-        observable = getNetAPIInstance().uploadFile(path, params);
+        observable = getNetAPIInstance().uploadFile(url, params);
         doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
     }
 

@@ -14,6 +14,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 public interface IAPINetService {
 
@@ -32,8 +33,8 @@ public interface IAPINetService {
     Observable<BaseResponse> requestGet(@Path("url") String url, @QueryMap Map<String, String> params);
 
     @Multipart
-    @POST("{path}")
-    Observable<BaseResponse> uploadFile(@Path("path") String path, @PartMap Map<String, RequestBody> files);
+    @POST
+    Observable<BaseResponse> uploadFile(@Url String url, @PartMap Map<String, RequestBody> files);
 
     // 删除 restful
     @DELETE("{path}/{id}")

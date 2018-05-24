@@ -12,7 +12,7 @@ import com.http.httpdemo.http.ApiManager;
 
 public class MyApplication extends Application {
 
-    private String baseUrl = "http://op.juhe.cn/";
+    private String baseUrl = "http://api.bigplayer666.com/";
     public static Context context;
 
     @Override
