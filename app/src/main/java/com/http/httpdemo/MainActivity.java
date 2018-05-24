@@ -73,8 +73,13 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onNext(DownloadInfo downloadInfo) {
                 super.onNext(downloadInfo);
+                int progress = 0;
                 if (downloadInfo.getTotal() > 0) {
+                    progress = (int) (downloadInfo.getProgress() * 100 / downloadInfo.getTotal());
                     tv_progress.setText("下载进度：" + downloadInfo.getProgress() * 100 / downloadInfo.getTotal() + "%");
+                }
+                if (progress == 100) {
+                    textView.setText("文件下载至：" + DownloadManager.getDownloadFile(downloadInfo.getUrl()).getAbsolutePath());
                 }
             }
 
