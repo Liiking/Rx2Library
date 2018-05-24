@@ -1,9 +1,11 @@
-package com.http.httpdemo;
+package com.http.httpdemo.util;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.text.TextUtils;
+
+import com.http.httpdemo.MyApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,6 +167,22 @@ public class FileUtil {
      */
     public static boolean checkFilePathExists(String path) {
         return path != null && new File(path).exists();
+    }
+
+    /**
+     * 删除文件
+     */
+    public static boolean deleteFileWithPath(String filePath) {
+        if (!checkFilePathExists(filePath)) {
+            return false;
+        }
+        SecurityManager checker = new SecurityManager();
+        File f = new File(filePath);
+        checker.checkDelete(filePath);
+        if (f.isFile()) {
+            return f.delete();
+        }
+        return false;
     }
 
     /**

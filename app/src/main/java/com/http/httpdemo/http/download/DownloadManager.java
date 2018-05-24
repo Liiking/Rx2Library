@@ -1,11 +1,10 @@
 package com.http.httpdemo.http.download;
 
-import android.content.Context;
 import android.text.TextUtils;
 
-import com.http.httpdemo.FileUtil;
+import com.http.httpdemo.util.FileUtil;
 import com.http.httpdemo.MyApplication;
-import com.http.httpdemo.Utility;
+import com.http.httpdemo.util.Utility;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,12 +65,12 @@ public class DownloadManager {
     }
 
     /**
-     * 开始下载
+     * TODO 开始下载 (优化：是否覆盖原文件，改成Flowable)
      *
      * @param url              下载请求的网址
      * @param downLoadObserver 用来回调的接口
      */
-    public void download(Context context, final String url, DownLoadObserver downLoadObserver) {
+    public void download(final String url, DownLoadObserver downLoadObserver) {
         Observable.just(url)
                 .filter(new Predicate<String>() {
                     @Override

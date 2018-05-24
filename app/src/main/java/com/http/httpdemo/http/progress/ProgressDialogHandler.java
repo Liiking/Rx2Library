@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 
-import com.http.httpdemo.Utility;
+import com.http.httpdemo.util.Utility;
 
 /**
  * Created by qwy on 16/3/10.

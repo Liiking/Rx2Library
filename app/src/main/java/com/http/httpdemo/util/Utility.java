@@ -1,4 +1,4 @@
-package com.http.httpdemo;
+package com.http.httpdemo.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

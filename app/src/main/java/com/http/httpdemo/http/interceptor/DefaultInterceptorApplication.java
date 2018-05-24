@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.http.httpdemo.Utility;
+import com.http.httpdemo.util.Utility;
 
 import java.io.IOException;
 

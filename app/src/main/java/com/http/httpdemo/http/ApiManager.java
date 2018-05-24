@@ -4,10 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.http.httpdemo.Utility;
+import com.http.httpdemo.util.Utility;
 import com.http.httpdemo.http.exception.HttpResponseFunc;
 import com.http.httpdemo.http.exception.ServerResponseFunc;
 import com.http.httpdemo.http.interceptor.DefaultInterceptorApplication;
@@ -127,8 +127,6 @@ public class ApiManager {
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull Disposable disposable) throws Exception {
-                        Log.e("RxHttpUtils",
-                                "accept(RxHttpUtils.java:72)" + "添加到绑定订阅集合");
                         addDisposable(disposableFlag, disposable);
                     }
                 })
@@ -179,7 +177,7 @@ public class ApiManager {
      * @param disposable        disposable
      */
     public static void addDisposable(String disposableFlag, Disposable disposable) {
-        Utility.log("======addDisposable disposableFlag :" + disposableFlag);
+        Utility.log("======开始订阅 disposableFlag :" + disposableFlag);
         if (disposableMap != null) {
             disposableMap.put(disposableFlag, disposable);
         }
@@ -191,7 +189,7 @@ public class ApiManager {
      * @param disposableFlag disposable标志
      */
     public static void cancelSubscribeByFlag(String disposableFlag) {
-        Utility.log("======cancelSubscribeByFlag disposableFlag :" + disposableFlag);
+        Utility.log("======取消订阅 disposableFlag :" + disposableFlag);
         Iterator<Map.Entry<String, Disposable>> it = disposableMap.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Disposable> entry = it.next();

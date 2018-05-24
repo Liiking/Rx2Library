@@ -8,8 +8,6 @@ import android.media.ExifInterface;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.http.httpdemo.FileUtil;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
