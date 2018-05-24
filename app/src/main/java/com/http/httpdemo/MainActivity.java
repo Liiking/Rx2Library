@@ -18,13 +18,11 @@ import com.http.httpdemo.model.UploadPhoto;
 import com.http.httpdemo.util.FileUtil;
 import com.http.httpdemo.util.PictureUtil;
 import com.http.httpdemo.util.Utility;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import io.reactivex.disposables.Disposable;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;

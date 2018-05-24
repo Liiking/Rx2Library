@@ -15,7 +15,7 @@
             android:centerY="0.50"
             android:centerColor="@color/colorPrimary"
             android:endColor="@color/colorPrimary"
-            android:startColor="@color/colorPrimary"
+            android:startColor="@color/transparent_black_loading"
             android:type="sweep"
             android:useLevel="false" />
 

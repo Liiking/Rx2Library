@@ -15,7 +15,7 @@ import me.nereo.multi_image_selector.MultiImageSelector;
 
 /**
  * Created by qwy on 2018/5/23.
- * 生命周期管理
+ * base activity 管理请求的订阅和取消，提供公共方法等
  */
 public abstract class BaseActivity extends AppCompatActivity {
 

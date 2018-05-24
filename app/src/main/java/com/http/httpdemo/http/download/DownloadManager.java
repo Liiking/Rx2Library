@@ -148,7 +148,7 @@ public class DownloadManager {
         String fileName = getFileName(url);
         downloadInfo.setFileName(fileName);
         File file = new File(getRootDownloadDir(), fileName);
-        Utility.chmod(file.getAbsolutePath());
+        FileUtil.requestPermission(file.getAbsolutePath());
         // 设置改变过的文件名/大小
         downloadInfo.setProgress(0);
         return downloadInfo;

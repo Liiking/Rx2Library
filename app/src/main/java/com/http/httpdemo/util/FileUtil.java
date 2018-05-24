@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.text.TextUtils;
-
 import com.http.httpdemo.MyApplication;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -19,7 +17,7 @@ public class FileUtil {
 
     /**
      * 程序包数据存储路径
-     * <p>
+     *
      * eg: storage/emulated/0/Android/data/packagename
      */
     public static String getPackagePath() {
@@ -59,9 +57,9 @@ public class FileUtil {
 
     /***
      * 获取根文件路径
-     * @param context
-     * @param preferExternal 是否使用外部SDcard,true：使用外部SDcard,false:使用Android下包路径的cache路径
-     * @return
+     *
+     * @param context           上下文
+     * @param preferExternal    是否使用外部SDCard,true：使用外部SDCard,false:使用Android下包路径的cache路径
      */
     private static File getCacheDirectory(Context context, boolean preferExternal) {
         File appCacheDir = null;
@@ -83,10 +81,10 @@ public class FileUtil {
     }
 
     /***
-     * 获取SDcard外部文件路径
+     * 获取SDCard外部文件路径
+     *
      *../android/data/data/....
      * @param context
-     * @return
      */
     public static File getExternalCacheDir(Context context) {
         File dataDir = new File(new File(Environment.getExternalStorageDirectory(), "Android"), "data");
@@ -107,8 +105,8 @@ public class FileUtil {
 
     /***
      * 判断是否有写外部文件的权限
-     * @param context
-     * @return
+     *
+     * @param context   上下文
      */
     private static boolean hasExternalStoragePermission(Context context) {
         int perm = context.checkCallingOrSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE");
@@ -117,8 +115,8 @@ public class FileUtil {
 
     /**
      * 修改文件或文件夹权限
-     * @param path
-     * @return
+     *
+     * @param path      要修改的目录路径
      */
     public static void requestPermission(String path) {
         String[] command = {"chmod", "777", path};
@@ -131,12 +129,12 @@ public class FileUtil {
     }
 
     /**
-     * 获取程序文件数据存储路径 <br/>
-     * <p>
+     * 获取程序文件数据存储路径
+     *
      * eg: storage/emulated/0/Android/data/com.goopal.grb.xkey/files
      */
     public static String getExternalFilesPath() {
-        //storage/emulated/0/Android/data/com.goopal.grb.xkey/files
+        //storage/emulated/0/Android/data/package/files
         File appFile = MyApplication.context.getExternalFilesDir(null);
         if (appFile != null)
             return appFile.getAbsolutePath();
@@ -199,7 +197,7 @@ public class FileUtil {
 
     /**
      * 文件存储路径
-     * <p>
+     *
      * eg: SDCard/Android/data/packageName/files/张三/2018-03-14/
      */
     public static String getFilePath(String userName) {

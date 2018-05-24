@@ -3,7 +3,6 @@ package com.http.httpdemo.http.progress;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-
 import com.http.httpdemo.R;
 
 /**
@@ -18,8 +17,9 @@ public class CustomLoadingDialog extends Dialog {
 
     /**
      * 自定义加载框主题
-     * @param context
-     * @param theme
+     *
+     * @param context   上下文
+     * @param theme     主题资源
      */
     public CustomLoadingDialog(Context context, int theme){
             super(context, theme);

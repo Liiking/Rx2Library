@@ -138,21 +138,6 @@ public class Utility {
     }
 
     /**
-     * 修改文件或文件夹权限
-     *
-     * @param path      要修改权限的目录
-     */
-    public static void chmod(String path) {
-        String[] command = {"chmod", "777", path};
-        ProcessBuilder builder = new ProcessBuilder(command);
-        try {
-            builder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 是否有网络
      *
      * @param context   上下文
