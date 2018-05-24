@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity {
     private ImageView imageView;
     private TextView textView;
     private TextView tv_progress;
+    private TextView tv_upload_path;
 
     private static final String URL_UPLOAD_FILE = "file/upload";     //   post    上传文件接口
     private static final String URL_COMMON_LOGIN = "user/login";     //   post    登录
@@ -48,16 +49,7 @@ public class MainActivity extends BaseActivity {
         imageView = (ImageView) findViewById(R.id.imageView);
         textView = (TextView) findViewById(R.id.textView);
         tv_progress = (TextView) findViewById(R.id.tv_progress);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String content = textView.getText().toString().trim();
-                if (!TextUtils.isEmpty(content)) {
-                    Utility.copyContent(MainActivity.this, content);
-                    Utility.shortToast(MainActivity.this, "复制成功");
-                }
-            }
-        });
+        tv_upload_path = (TextView) findViewById(R.id.tv_upload_path);
         findViewById(R.id.get).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +137,7 @@ public class MainActivity extends BaseActivity {
                     tv_progress.setText("下载进度：" + downloadInfo.getProgress() * 100 / downloadInfo.getTotal() + "%");
                 }
                 if (progress == 100) {
-                    textView.setText(DownloadManager.getDownloadFile(downloadInfo.getUrl()).getAbsolutePath());
+                    tv_progress.setText(DownloadManager.getDownloadFile(downloadInfo.getUrl()).getAbsolutePath());
                 }
             }
 
@@ -185,7 +177,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onNext(UploadPhoto obj) {
                 if (obj != null) {
-                    textView.setText(obj.getPath());
+                    tv_upload_path.setText(obj.getPath());
                     Utility.shortToast(MainActivity.this, "上传成功");
                 }
             }
