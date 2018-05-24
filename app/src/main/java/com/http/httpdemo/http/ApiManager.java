@@ -7,10 +7,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.http.httpdemo.Utility;
 import com.http.httpdemo.http.exception.HttpResponseFunc;
 import com.http.httpdemo.http.interceptor.DefaultInterceptorApplication;
 import com.http.httpdemo.http.interceptor.DefaultInterceptorNetwork;
-import com.http.httpdemo.http.response.BaseResponse;
 import com.http.httpdemo.http.subscribers.ProgressSubscriber;
 import com.http.httpdemo.http.subscribers.SubscriberListener;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -71,7 +71,8 @@ public class ApiManager {
 
     /**
      * 设置系统参数
-     * @param params
+     *
+     * @param params 原请求参数map
      */
     public void putSystemParams(@NonNull Map<String, String> params) {
     }
@@ -79,13 +80,13 @@ public class ApiManager {
     /**
      * 发送请求
      *
-     * @param disposableFlag    去掉订阅的flag
+     * @param disposableFlag    取消订阅的flag
      * @param hideLoading       是否隐藏加载框  false：显示  true：隐藏
      * @param hideMsg           是否隐藏无网络toast提示  false：显示  true：隐藏
      * @param path              请求路径，在UrlConfig中定义
      * @param isGet             是否是Get请求 true：get 请求
      * @param tClass            对应的data数据类型
-     * @param params            Get请求是，对应的url参数
+     * @param params            请求参数
      * @param listener          请求回调
      */
     public <T> void request(Context context, String disposableFlag, final boolean hideLoading, final boolean hideMsg, final String path, final boolean isGet, final Class<T> tClass, Map<String, String> params, final SubscriberListener<T> listener) {
@@ -107,6 +108,17 @@ public class ApiManager {
         doSubscribe(context, disposableFlag, hideLoading, false, observable, tClass, listener);
     }
 
+    /**
+     * 订阅 请求开始
+     *
+     * @param context           上下文
+     * @param disposableFlag    取消订阅的flag
+     * @param hideLoading       是否隐藏加载框  false：显示  true：隐藏
+     * @param hideMsg           是否隐藏无网络toast提示  false：显示  true：隐藏
+     * @param observable        被观察者
+     * @param tClass            对应的data数据类型
+     * @param listener          请求回调
+     */
     public <T> void doSubscribe(Context context, final String disposableFlag, boolean hideLoading, boolean hideMsg, Observable<BaseResponse> observable, final Class<T> tClass, final SubscriberListener<T> listener) {
         ProgressSubscriber<T> subscriber = new ProgressSubscriber<T>(context, hideLoading, hideMsg, listener);
         observable.subscribeOn(Schedulers.io())
@@ -161,7 +173,8 @@ public class ApiManager {
     /**
      * 保存Disposable订阅对象
      *
-     * @param disposable disposable
+     * @param disposableFlag    disposable标志
+     * @param disposable        disposable
      */
     public static void addDisposable(String disposableFlag, Disposable disposable) {
         Utility.log("======addDisposable disposableFlag :" + disposableFlag);
@@ -173,7 +186,7 @@ public class ApiManager {
     /**
      * 根据disposableFlag取消对应的订阅
      *
-     * @param disposableFlag String
+     * @param disposableFlag disposable标志
      */
     public static void cancelSubscribeByFlag(String disposableFlag) {
         Utility.log("======cancelSubscribeByFlag disposableFlag :" + disposableFlag);
@@ -276,8 +289,16 @@ public class ApiManager {
 
     /**
      * 创建ServiceApi对象
+     *
+     * @param context                   上下文
+     * @param baseUrl                   请求的baseUrl
+     * @param factory                   适配器工厂类
+     * @param serviceClass              service类
+     * @param applicationInterceptor    应用层拦截器
+     * @param netWorkInterceptor        网络层拦截器
+     * @param rawResources              HTTPS证书资源
      */
-    public static <T> T createServiceAPI(Context context, String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass, Interceptor applicationInterceptor, Interceptor[] netWorkInterceptor, int... rawResources) {
+    private static <T> T createServiceAPI(Context context, String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass, Interceptor applicationInterceptor, Interceptor[] netWorkInterceptor, int... rawResources) {
         try {
             Interceptor temApplicationInterceptor = applicationInterceptor;
             if (temApplicationInterceptor == null) {
@@ -293,9 +314,9 @@ public class ApiManager {
                     .readTimeout(READ_TIME, TimeUnit.SECONDS)
                     .connectTimeout(CONNECT_TIME, TimeUnit.SECONDS)
                     .addInterceptor(temApplicationInterceptor);
-//            for (Interceptor tem : temNetsInterceptor) {
-//                builder.addNetworkInterceptor(tem);
-//            }
+            for (Interceptor tem : temNetsInterceptor) {
+                builder.addNetworkInterceptor(tem);
+            }
             builder.retryOnConnectionFailure(true);
             try {
                 initHttpsConfig(context, builder, rawResources);
@@ -332,7 +353,7 @@ public class ApiManager {
     /***
      * https证书
      */
-    public static void initHttpsConfig(Context context, OkHttpClient.Builder builder, int... rawResources) {
+    private static void initHttpsConfig(Context context, OkHttpClient.Builder builder, int... rawResources) {
         try {
             if (context != null && rawResources != null && rawResources.length > 0) {
                 final String KEY_STORE_TYPE_P12 = "PKCS12";//证书类型
@@ -364,7 +385,7 @@ public class ApiManager {
         }
     }
 
-    public static Gson getGson() {
+    private static Gson getGson() {
         Gson gson = new Gson();
         try {
             GsonBuilder builder = new GsonBuilder();

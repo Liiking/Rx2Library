@@ -4,7 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.http.httpdemo.http.Utility;
+import com.http.httpdemo.Utility;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import okhttp3.ResponseBody;
 
 /**
  * 应用层拦截器
- * Created by RP on 2015/12/15.
+ * Created by qwy on 2015/12/15.
  */
 public class DefaultInterceptorApplication extends DefaultInterceptorNetwork {
     private final Handler mHander = new Handler(Looper.getMainLooper()) {

@@ -1,14 +1,9 @@
 package com.http.httpdemo.http;
 
-import com.http.httpdemo.http.response.BaseResponse;
-
 import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;

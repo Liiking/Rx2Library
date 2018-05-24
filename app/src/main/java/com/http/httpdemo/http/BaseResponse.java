@@ -1,13 +1,17 @@
-package com.http.httpdemo.http.response;
+package com.http.httpdemo.http;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by qwy on 2017/7/10.
  * 返回的基本数据类型
  */
 public class BaseResponse<T> {
+    // 与后台约定好的固定返回格式
     private String message;
     private int code;
-    public T result;
+    @SerializedName("result") // 测试用
+    public T data;
 
     public String getMessage() {
         return message;
@@ -26,11 +30,11 @@ public class BaseResponse<T> {
     }
 
     public T getData() {
-        return result;
+        return data;
     }
 
     public void setData(T data) {
-        this.result = data;
+        this.data = data;
     }
 
     @Override

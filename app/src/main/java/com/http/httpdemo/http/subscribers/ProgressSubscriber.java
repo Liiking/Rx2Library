@@ -2,8 +2,7 @@ package com.http.httpdemo.http.subscribers;
 
 import android.content.Context;
 import com.http.httpdemo.R;
-import com.http.httpdemo.http.ApiManager;
-import com.http.httpdemo.http.Utility;
+import com.http.httpdemo.Utility;
 import com.http.httpdemo.http.exception.ApiException;
 import com.http.httpdemo.http.exception.ERROR;
 import com.http.httpdemo.http.progress.ProgressCancelListener;

@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.http.httpdemo.FileUtil;
 import com.http.httpdemo.MyApplication;
-import com.http.httpdemo.http.Utility;
+import com.http.httpdemo.Utility;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;

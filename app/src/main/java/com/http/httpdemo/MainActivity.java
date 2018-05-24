@@ -2,11 +2,9 @@ package com.http.httpdemo;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.http.httpdemo.http.ApiManager;
-import com.http.httpdemo.http.Utility;
 import com.http.httpdemo.http.download.DownLoadObserver;
 import com.http.httpdemo.http.download.DownloadInfo;
 import com.http.httpdemo.http.download.DownloadManager;

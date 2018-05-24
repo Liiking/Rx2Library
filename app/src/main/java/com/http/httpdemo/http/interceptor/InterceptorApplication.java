@@ -5,8 +5,8 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.google.gson.Gson;
-import com.http.httpdemo.http.Utility;
-import com.http.httpdemo.http.response.BaseResponse;
+import com.http.httpdemo.Utility;
+import com.http.httpdemo.http.BaseResponse;
 
 import java.io.IOException;
 

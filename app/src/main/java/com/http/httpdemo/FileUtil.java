@@ -5,8 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import com.http.httpdemo.http.Utility;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
