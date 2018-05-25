@@ -18,7 +18,7 @@ public class FileUtil {
     /**
      * 程序包数据存储路径
      *
-     * eg: storage/emulated/0/Android/data/packagename
+     * eg: storage/emulated/0/Android/data/packageName
      */
     public static String getPackagePath() {
         File appFile = MyApplication.context.getExternalFilesDir(null);
@@ -131,10 +131,10 @@ public class FileUtil {
     /**
      * 获取程序文件数据存储路径
      *
-     * eg: storage/emulated/0/Android/data/com.goopal.grb.xkey/files
+     * eg: storage/emulated/0/Android/data/packageName/files
      */
     public static String getExternalFilesPath() {
-        //storage/emulated/0/Android/data/package/files
+        //storage/emulated/0/Android/data/packageName/files
         File appFile = MyApplication.context.getExternalFilesDir(null);
         if (appFile != null)
             return appFile.getAbsolutePath();

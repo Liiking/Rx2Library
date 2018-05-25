@@ -33,6 +33,14 @@ public class ProgressSubscriber<T> implements Observer<T>, ProgressCancelListene
         this(context, hideLoading, false, mSubscriberListener);
     }
 
+    /**
+     * 创建带加载提示框的Subscriber TODO 重载方法设置提示框是否可手动取消，是否需要和订阅绑定
+     *
+     * @param context               上下文
+     * @param hideLoading           是否展示提示框
+     * @param hideMsg               是否显示错误信息
+     * @param mSubscriberListener   请求回调监听
+     */
     public ProgressSubscriber(Context context, boolean hideLoading, boolean hideMsg, SubscriberListener<T> mSubscriberListener) {
         this.context = context;
         this.hideMsg = hideMsg;
@@ -57,8 +65,9 @@ public class ProgressSubscriber<T> implements Observer<T>, ProgressCancelListene
     }
 
     /**
-     * 订阅开始时调用
-     * 显示ProgressDialog
+     * 订阅开始时调用 显示ProgressDialog
+     *
+     * @param d Disposable
      */
     @Override
     public void onSubscribe(Disposable d) {
@@ -102,10 +111,9 @@ public class ProgressSubscriber<T> implements Observer<T>, ProgressCancelListene
     }
 
     /**
-     * 对错误进行统一处理
-     * 隐藏ProgressDialog
+     * 对错误进行统一处理 隐藏ProgressDialog
      *
-     * @param e
+     * @param e     请求出错
      */
     public void onError(ApiException e) {
         if (mSubscriberListener != null) {
@@ -116,6 +124,7 @@ public class ProgressSubscriber<T> implements Observer<T>, ProgressCancelListene
 
     /**
      * 将onNext方法中的返回结果交给Activity或Fragment自己处理
+     *
      * @param t 创建Subscriber时的泛型类型
      */
     @Override

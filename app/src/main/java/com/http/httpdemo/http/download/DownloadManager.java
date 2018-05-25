@@ -34,7 +34,7 @@ public class DownloadManager {
     private static final AtomicReference<DownloadManager> INSTANCE = new AtomicReference<>();
     private HashMap<String, Call> downCalls;// 用来存放各个下载的请求
     private OkHttpClient mClient;// OKHttpClient;
-    private static String ROOT_DOWNLOAD_DIR = FileUtil.getDownloadPath(MyApplication.context);
+    private static String ROOT_DOWNLOAD_DIR = FileUtil.getDownloadPath(MyApplication.context);// TODO 下载文件的根目录，传入
 
     // 获得一个单例类
     public static DownloadManager getInstance() {
@@ -122,8 +122,7 @@ public class DownloadManager {
     /**
      * 从URL里截取文件名
      *
-     * @param url
-     * @return
+     * @param url       文件下载地址
      */
     private static String getFileName(String url) {
         if (TextUtils.isEmpty(url)) {
@@ -135,8 +134,8 @@ public class DownloadManager {
     /**
      * 创建DownInfo
      *
-     * @param url 请求网址
-     * @return DownInfo
+     * @param url       请求网址
+     * @return          要下载的文件实体类
      */
     private DownloadInfo createDownInfo(String url) {
         DownloadInfo downloadInfo = new DownloadInfo(url);
@@ -227,8 +226,8 @@ public class DownloadManager {
     /**
      * 获取下载长度
      *
-     * @param downloadUrl
-     * @return
+     * @param downloadUrl       文件地址
+     * @return                  指定地址下文件大小 字节
      */
     public long getContentLength(String downloadUrl) {
         Request request = new Request.Builder()

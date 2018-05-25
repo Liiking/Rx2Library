@@ -68,11 +68,10 @@ public class InterceptorApplication extends DefaultInterceptorNetwork {
 
     }
 
-    /***
+    /**
      * 解密数据
      *
-     * @param response
-     * @return
+     * @param response      响应
      */
     private Response createResponse(Request request, Response response, String content) {
         Response.Builder builder = response.newBuilder();

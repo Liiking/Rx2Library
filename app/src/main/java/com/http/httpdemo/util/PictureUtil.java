@@ -26,9 +26,8 @@ public class PictureUtil {
 	/**
 	 * 根据文件名称获取文件的后缀字符串
 	 * 
-	 * @param filename
-	 *            文件的名称,可能带路径
-	 * @return 文件的后缀字符串
+	 * @param filename		文件的名称,可能带路径
+	 * @return 				文件的后缀字符串
 	 */
 	public static String getFileExtensionFromUrl(String filename) {
 		if (!TextUtils.isEmpty(filename)) {
@@ -53,7 +52,7 @@ public class PictureUtil {
 	/**
 	 * 根据路径删除图片
 	 * 
-	 * @param path
+	 * @param path			要删除的文件路径
 	 */
 	public static void deleteTempFile(String path) {
 		File file = new File(path);
@@ -294,8 +293,6 @@ public class PictureUtil {
 	 * 
 	 * @param srcFilePath		要操作的文件路径
 	 * @param bitmap			旋转后的bitmap
-	 * @throws IOException
-	 * @throws OutOfMemoryError
 	 */
 	private static Bitmap rotateBitMap(String srcFilePath, Bitmap bitmap)
 			throws IOException, OutOfMemoryError {
@@ -571,7 +568,6 @@ public class PictureUtil {
 	 *
 	 * @param context		上下文
 	 * @param path 			要压缩的图片路径
-	 * @return
 	 */
 	public static String compressImageTo200KB(Context context, String path) {
 		File srcFile = new File(path);

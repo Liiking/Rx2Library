@@ -19,18 +19,18 @@ import retrofit2.http.Url;
 public interface IAPINetService {
 
     @FormUrlEncoded
-    @POST("{url}")
-    Observable<BaseResponse> requestPost(@Path("url") String url, @FieldMap Map<String, String> params);
+    @POST
+    Observable<BaseResponse> requestPost(@Url String url, @FieldMap Map<String, String> params);
 
     @FormUrlEncoded
-    @POST("{url}")
-    Observable<BaseResponse> requestPost(@Path("url") String url);
+    @POST
+    Observable<BaseResponse> requestPost(@Url String url);
 
-    @GET("{url}")
-    Observable<BaseResponse> requestGet(@Path("url") String url);
+    @GET
+    Observable<BaseResponse> requestGet(@Url String url);
 
-    @GET("{url}")
-    Observable<BaseResponse> requestGet(@Path("url") String url, @QueryMap Map<String, String> params);
+    @GET
+    Observable<BaseResponse> requestGet(@Url String url, @QueryMap Map<String, String> params);
 
     @Multipart
     @POST
@@ -41,15 +41,15 @@ public interface IAPINetService {
     Observable<BaseResponse> delete(@Path("path") String path, @Path("id") String id);
 
     // 删除
-    @DELETE("{path}")
-    Observable<BaseResponse> delete(@Path("path") String path, @QueryMap Map<String, String> params);
+    @DELETE
+    Observable<BaseResponse> delete(@Url String url, @QueryMap Map<String, String> params);
 
     // 修改 restful
     @PUT("{path}/{id}")
     Observable<BaseResponse> put(@Path("path") String path, @Path("id") String id);
 
     // 修改
-    @PUT("{path}")
-    Observable<BaseResponse> put(@Path("path") String path, @QueryMap Map<String, String> params);
+    @PUT
+    Observable<BaseResponse> put(@Url String url, @QueryMap Map<String, String> params);
 
 }

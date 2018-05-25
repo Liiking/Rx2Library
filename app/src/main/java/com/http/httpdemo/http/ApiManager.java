@@ -110,7 +110,7 @@ public class ApiManager {
     }
 
     /**
-     * 统一订阅入口 请求开始
+     * 统一订阅入口 请求开始 。TODO 考虑是否需要返回完整BaseResponse的情况
      *
      * @param context           上下文
      * @param disposableFlag    取消订阅的flag
