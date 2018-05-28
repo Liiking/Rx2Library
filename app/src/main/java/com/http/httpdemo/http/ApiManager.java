@@ -4,9 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.http.httpdemo.sign.SignUtil;
 import com.http.httpdemo.util.Utility;
 import com.http.httpdemo.http.exception.HttpResponseFunc;
 import com.http.httpdemo.http.exception.ServerResponseFunc;
@@ -283,8 +283,67 @@ public class ApiManager {
         doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
     }
 
+    public <T> void testOcr(Context context, String disposableFlag, final boolean hideLoading, String url, final Class<T> tClass, final Map<String, RequestBody> params, SubscriberListener<T> listener) {
+        IAPINetService service = createOcrServiceAPI(context, RxJava2CallAdapterFactory.create(), IAPINetService.class);
+        if (service != null) {
+            Observable<BaseResponse> observable = service.uploadFile(url, params);;
+            doSubscribe(context, disposableFlag, hideLoading, observable, tClass, listener);
+        }
+    }
+
     public static <T> T createServiceAPI(Context context, String baseUrl, CallAdapter.Factory factory, Class<T> serviceClass) {
         return createServiceAPI(context, baseUrl, factory, serviceClass, null, null, null);
+    }
+
+    public static <T> T createOcrServiceAPI(Context context, CallAdapter.Factory factory, Class<T> serviceClass) {
+        try {
+            DefaultInterceptorApplication temApplicationInterceptor = new DefaultInterceptorApplication();
+            Interceptor[] temNetsInterceptor = new Interceptor[1];
+            temNetsInterceptor[0] = new DefaultInterceptorNetwork();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .readTimeout(READ_TIME, TimeUnit.SECONDS)
+                    .connectTimeout(CONNECT_TIME, TimeUnit.SECONDS)
+                    .addInterceptor(temApplicationInterceptor);
+            for (Interceptor tem : temNetsInterceptor) {
+                builder.addNetworkInterceptor(tem);
+            }
+            builder.retryOnConnectionFailure(true);
+            try {
+                initHttpsConfig(context, builder, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            StringBuffer sb = new StringBuffer();
+            SignUtil.appSign("1252100433", "AKIDkOuNiR5cx64sihn8LRQ2qHdppiT5nQvH", "mmt2GUYVL0wjPeprxxnSytptz0tgkiV8", System.currentTimeMillis() / 1000 + 24 * 60 *60, "tencentyun", sb);
+            final String sign = sb.toString();
+                    OkHttpClient client = builder.addInterceptor(new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    // 添加公共头信息
+                    Request request = chain.request()
+                            .newBuilder()
+                            .addHeader("authorization", sign)
+                            .addHeader("host", "recognition.image.myqcloud.com")
+                            .addHeader("content-type", "multipart/form-data")// 1. 使用图片 url，选择 application/json； 2. 使用图片 image，选择 multipart/form-data。
+                            .build();
+                    Utility.log(request.headers().toString());
+                    return chain.proceed(request);
+                }
+            }).build();
+            Retrofit.Builder builder1 = new Retrofit.Builder()
+                    .baseUrl("http://recognition.image.myqcloud.com/")
+                    .addConverterFactory(GsonConverterFactory.create(getGson()));
+            if (factory != null) {
+                builder1.addCallAdapterFactory(factory);
+            }
+            Retrofit retrofit = builder1.callFactory(client)
+                    .build();
+            return retrofit.create(serviceClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -329,7 +388,6 @@ public class ApiManager {
                     // 添加公共头信息
                     Request request = chain.request()
                             .newBuilder()
-//                            .addHeader("Content-Type", "application/json")//  x-www-form-urlencoded
                             .build();
                     Utility.log(request.headers().toString());
                     return chain.proceed(request);

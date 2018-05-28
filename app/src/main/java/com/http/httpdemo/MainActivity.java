@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.http.httpdemo.http.ApiManager;
@@ -39,8 +41,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static final String URL_COMMON_LOGIN = "user/login";     //   post    登录
     private static final String URL_COMMON_LIST = "api/list";        //   get     获取列表
 
+    private static final String URL_VERIFY_ID_CARD = "ocr/idcard";   //   post    腾讯ocr 身份证识别接口
+
     private String token;
     private boolean isDownloading = false;// 是否正在下载中
+    private String local_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.post).setOnClickListener(this);
         findViewById(R.id.download).setOnClickListener(this);
         findViewById(R.id.upload).setOnClickListener(this);
+        findViewById(R.id.select).setOnClickListener(this);
+        findViewById(R.id.verify).setOnClickListener(this);
+    }
+
+    /**
+     * 测试识别身份证
+     */
+    private void testVerifyIdCard() {
+        if (TextUtils.isEmpty(local_path)) {
+            Utility.shortToast(MainActivity.this, "请先选择图片");
+            return ;
+        }
+        Map<String, RequestBody> p = new HashMap<>();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), new File(local_path));
+        putOcrParams(p, requestBody);
+        ApiManager.getInstance()
+                .testOcr(MainActivity.this, getDisposableFlag(), false, URL_VERIFY_ID_CARD, Object.class, p, new SubscriberListener<Object>() {
+                    @Override
+                    public void onNext(Object obj) {
+                        textView.setText(new Gson().toJson(obj));
+                        Utility.log("=================" + new Gson().toJson(obj));
+                    }
+                });
     }
 
     /**
@@ -147,12 +175,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 上传单张图片
-     *
-     * @param local_path 要上传的图片的本地路径
      */
-    protected void uploadSinglePicture(String local_path) {
-        String compressPath = PictureUtil.compressImageTo200KB(this, local_path);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), new File(compressPath));
+    protected void uploadSinglePicture() {
+        if (TextUtils.isEmpty(local_path)) {
+            Utility.shortToast(MainActivity.this, "请先选择图片");
+            return ;
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), new File(local_path));
         Map<String, RequestBody> params = new HashMap<>();
         putUploadParams(params, requestBody);
         ApiManager.getInstance().uploadFile(this, getDisposableFlag(), false, URL_UPLOAD_FILE, UploadPhoto.class, params, new SubscriberListener<UploadPhoto>() {
@@ -187,8 +216,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if (path != null && path.size() > 0) {
                     String url = path.get(0);
+                    local_path = PictureUtil.compressImageTo200KB(this, url);
                     Glide.with(MainActivity.this).load(url).into(imageView);
-                    uploadSinglePicture(url);
                 }
             }
         }
@@ -210,6 +239,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         params.put("imageFiles\";filename=\"" + System.currentTimeMillis() + ".png", requestBody);
     }
 
+    /**
+     * 添加身份证识别参数
+     *
+     * @param params        参数map
+     * @param requestBody   要上传的文件
+     */
+    private void putOcrParams(Map<String, RequestBody> params, RequestBody requestBody) {
+        RequestBody appid = RequestBody.create(MediaType.parse("text/plain"), "1252100433");
+        RequestBody card_type = RequestBody.create(MediaType.parse("text/plain"), "0");
+        RequestBody type = RequestBody.create(MediaType.parse("text/plain"), "gravatar");
+        params.put("appid", appid);
+        params.put("card_type", card_type);// 0 为身份证有照片的一面，1 为身份证有国徽的一面；如果未指定，默认为0。
+        params.put("type", type);
+        params.put("images\";filename=\"" + System.currentTimeMillis() + ".png", requestBody);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -222,12 +267,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.download:// 测试文件下载
                 testDownload();
                 break;
+            case R.id.select:// 选择图片
+                selectSinglePicture();
+                break;
+            case R.id.verify:// 身份证识别
+                testVerifyIdCard();
+                break;
             case R.id.upload:// 测试文件上传
                 if (TextUtils.isEmpty(token)) {
                     Utility.shortToast(MainActivity.this, "请先请求post接口");
                     return ;
+                } else {
+                    uploadSinglePicture();
                 }
-                selectSinglePicture();
                 break;
             case R.id.tv_upload_path:// 复制文件下载路径
                 String content = tv_upload_path.getText().toString().trim();
