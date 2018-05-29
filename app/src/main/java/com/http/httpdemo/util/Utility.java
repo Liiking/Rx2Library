@@ -73,8 +73,6 @@ public class Utility {
 
     public static String SP = "shared_preference";
     public static boolean showLog = true;// 是否打印日志,true打印日志
-    private static int versionCode;
-    private static String versionName;
 
     /**
      * 打印日志
@@ -97,6 +95,12 @@ public class Utility {
         }
     }
 
+    /**
+     * 展示toast信息
+     *
+     * @param context   上下文
+     * @param msg       要展示的信息资源
+     */
     public static void shortToast(Context context, int msg) {
         if (context == null || msg == 0) {
             return ;
@@ -111,6 +115,12 @@ public class Utility {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 在主线程展示toast信息
+     *
+     * @param context       上下文
+     * @param msg           要展示的信息
+     */
     public static void shortToastInMainThread(Context context, int msg) {
         if (context == null || msg == 0) {
             return ;
@@ -152,8 +162,9 @@ public class Utility {
 
     /**
      * 复制指定内容到系统剪贴板
-     * @param context
-     * @param content
+     *
+     * @param context   上下文
+     * @param content   要复制的内容
      */
     public static void copyContent(Context context, String content) {
         if (TextUtils.isEmpty(content)) {
@@ -517,7 +528,7 @@ public class Utility {
     /**
      * format时间,智能显示,用于视频播放显示时长 最大显示: 59:59:59
      *
-     * @param time 要转换的时间毫秒值 不大于
+     * @param time      要转换的时间毫秒值 不大于
      */
     @SuppressLint("SimpleDateFormat")
     public static String getSmartVideoTime(long time){
@@ -539,8 +550,8 @@ public class Utility {
     /**
      * 描述：获取表示当前日期时间的字符串.
      *
-     * @param format  格式化字符串，如："yyyy-MM-dd HH:mm:ss"
-     * @return String String类型的当前日期时间
+     * @param format    格式化字符串，如："yyyy-MM-dd HH:mm:ss"
+     * @return          String类型的当前日期时间
      */
     public static String getCurrentDate(String format) {
         String curDateTime = null;
@@ -698,10 +709,10 @@ public class Utility {
     /**
      * 展示消息对话框
      *
-     * @param context
-     * @param message
-     * @param okText
-     * @param okListener
+     * @param context           上下文
+     * @param message           提示消息
+     * @param okText            positive按钮文案
+     * @param okListener        positive按钮点击监听
      */
     public static void showMessageDialog(Context context, int message, String okText, final View.OnClickListener okListener) {
         showMessageDialog(context, "提示", context.getResources().getString(message), okText, okListener);
