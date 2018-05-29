@@ -210,7 +210,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CODE_SELECT_IMAGE){
-            if(resultCode == ImagePicker.RESULT_CODE_ITEMS){
+            if(data != null && resultCode == ImagePicker.RESULT_CODE_ITEMS){
                 // Get the result list of select image paths
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (images != null && images.size() > 0) {
