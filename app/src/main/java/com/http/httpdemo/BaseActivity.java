@@ -1,17 +1,17 @@
 package com.http.httpdemo;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-
 import com.http.httpdemo.http.ApiManager;
 import com.http.httpdemo.util.Utility;
-
-import me.nereo.multi_image_selector.MultiImageSelector;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.ui.ImageGridActivity;
 
 /**
  * Created by qwy on 2018/5/23.
@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     },
                     PERMISSIONS_REQUEST_STORAGE);
         } else {
-            selectPicture(true, 1);
+            selectPicture(false, 1);
         }
 
     }
@@ -60,33 +60,26 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 选取图片
      *
-     * @param showCamera    是否显示拍照
+     * @param openCamera    是否直接打开拍照
      * @param count         选取最大张数
      */
-    private void selectPicture(boolean showCamera, int count) {
+    private void selectPicture(boolean openCamera, int count) {
         if (count <= 0) {
             return ;
         }
-        if (count == 1) {
-            MultiImageSelector.create()
-                    .showCamera(showCamera) // show camera or not. true by default
-                    .single() // single mode
-                    .start(BaseActivity.this, REQUEST_CODE_SELECT_IMAGE);
-        } else {
-            MultiImageSelector.create()
-                    .showCamera(showCamera) // show camera or not. true by default
-                    .count(count) // max select image size, 9 by default. used width #.multi()
-                    .multi() // multi mode, default mode;
-//                .origin(ArrayList<String>) // original select data set, used width #.multi()
-                    .start(BaseActivity.this, REQUEST_CODE_SELECT_IMAGE);
+        ImagePicker.getInstance().setSelectLimit(count);
+        Intent intent = new Intent(this, ImageGridActivity.class);
+        if (openCamera) {
+            intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS,true); // 是否是直接打开相机
         }
+        startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                selectPicture(true, 1);
+                selectPicture(false, 1);
             } else {
                 // Permission Denied
                 Utility.shortToast(BaseActivity.this, "Permission Denied");

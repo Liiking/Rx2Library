@@ -6,8 +6,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.http.httpdemo.http.ApiManager;
@@ -20,13 +18,14 @@ import com.http.httpdemo.model.UploadPhoto;
 import com.http.httpdemo.util.FileUtil;
 import com.http.httpdemo.util.PictureUtil;
 import com.http.httpdemo.util.Utility;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import io.reactivex.disposables.Disposable;
-import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -211,11 +210,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_CODE_SELECT_IMAGE){
-            if(resultCode == RESULT_OK){
+            if(resultCode == ImagePicker.RESULT_CODE_ITEMS){
                 // Get the result list of select image paths
-                List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                if (path != null && path.size() > 0) {
-                    String url = path.get(0);
+                ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                if (images != null && images.size() > 0) {
+                    String url = images.get(0).path;
                     local_path = PictureUtil.compressImageTo200KB(this, url);
                     Glide.with(MainActivity.this).load(url).into(imageView);
                 }
