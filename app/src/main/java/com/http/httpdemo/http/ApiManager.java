@@ -135,7 +135,7 @@ public class ApiManager {
                     @Override
                     public T apply(BaseResponse response) {
                         try {
-                            Utility.LogTooLongE("doSubscribe:", "response:" + Utility.formatJson(response.getData().toString()));
+//                            Utility.LogTooLongE("doSubscribe:", "response:" + Utility.formatJson(response.getData().toString()));
                             // 服务器请求数据成功，返回里面的数据实体
                             if (tClass != null && response.getData() != null) {
                                 try {

@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             return ;
         }
         isDownloading = true;
-        String downloadFileUrl = "http://shop.axwith.com/apk/pinjungongshe.apk";
+        String downloadFileUrl = "https://static.xkey.vip/app/xkey.apk";
         File file = DownloadManager.getDownloadFile(downloadFileUrl);
         if (file != null && file.exists()) {
             FileUtil.deleteFileWithPath(file.getAbsolutePath());
